@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+
+  experimental: {
+    serverActions: { bodySizeLimit: "10mb" }, // 文件上传大小限制
+  },
 };
 
 export default nextConfig;
