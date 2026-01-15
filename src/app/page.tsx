@@ -1,6 +1,6 @@
 'use client'
 
-import { createTask, getTaskResult, getTaskStatus, uploadAsset } from '@/actions/rh'
+import { createWokflowTask, getTaskResult, getTaskStatus, uploadAsset } from '@/actions/rh'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { saveAs } from 'file-saver'
 import { useState } from 'react'
@@ -20,7 +20,7 @@ export default function Page() {
 
       const imageData = await uploadAsset(imageFile)
       const videoData = await uploadAsset(videoFile)
-      const taskRes = await createTask({ imageUrl: imageData.fileName, videoUrl: videoData.fileName })
+      const taskRes = await createWokflowTask({ imageUrl: imageData.fileName, videoUrl: videoData.fileName })
       setTaskDetail(taskRes)
     },
   })
