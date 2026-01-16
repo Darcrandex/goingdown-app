@@ -106,13 +106,13 @@ export async function getTaskResult(taskId: string) {
   }
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/outputs', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.TaskResult> = await res.json()
+  const json: AppScope.RunningHubResult<AppScope.TaskSuccessResult> = await res.json()
 
-  return json.data
+  return json
 }
 
 export async function createWokflowTask(params: { imageUrl: string; videoUrl: string }) {
-  const workflowId = '2011677229780049921'
+  const workflowId = '2011984406000443394'
   const myHeaders = new Headers()
   myHeaders.append('Host', 'www.runninghub.cn')
   myHeaders.append('Content-Type', 'application/json')
@@ -147,4 +147,46 @@ export async function createWokflowTask(params: { imageUrl: string; videoUrl: st
   const json: AppScope.RunningHubResult<AppScope.TaskDetail> = await res.json()
 
   return json.data
+}
+
+export async function runWokflowTask(params: { workflowId: string; nodeInfoList: AppScope.NodeInfo[] }) {
+  const myHeaders = new Headers()
+  myHeaders.append('Host', 'www.runninghub.cn')
+  myHeaders.append('Content-Type', 'application/json')
+
+  const raw = JSON.stringify({
+    apiKey: runninghubApiKey,
+    workflowId: params.workflowId,
+    nodeInfoList: params.nodeInfoList,
+  })
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  }
+
+  console.log('runWokflowTask params ====> ', params)
+
+  const res = await fetch('https://www.runninghub.cn/task/openapi/create', requestOptions as any)
+  const json: AppScope.RunningHubResult<AppScope.TaskDetail> = await res.json()
+
+  console.log('run workflow task====> ', json)
+
+  if (json.code !== 0) {
+    throw new Error(json.msg || '运行任务失败')
+  }
+
+  return json.data
+}
+
+// 计算任务消耗的积分
+export async function calculateTaskCostTime(taskResult: AppScope.TaskSuccessResult) {
+  // 每个秒消耗0.01积分
+  const balancePerSecond = 0.01
+  if (!Array.isArray(taskResult)) {
+    return 0
+  }
+  return taskResult.reduce((acc, cur) => acc + (Number.parseFloat(cur.taskCostTime) || 0), 0) * balancePerSecond
 }

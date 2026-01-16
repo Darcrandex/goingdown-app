@@ -1,3 +1,4 @@
+import AntdProvider from '@/components/AntdProvider'
 import QueryProvider from '@/components/QueryProvider'
 import type { Metadata } from 'next'
 import { PropsWithChildren, Suspense } from 'react'
@@ -13,7 +14,9 @@ export default function RootLayout(props: PropsWithChildren) {
     <html lang='en'>
       <body>
         <Suspense fallback={<div>Loading...</div>}>
-          <QueryProvider>{props.children}</QueryProvider>
+          <QueryProvider>
+            <AntdProvider>{props.children}</AntdProvider>
+          </QueryProvider>
         </Suspense>
       </body>
     </html>

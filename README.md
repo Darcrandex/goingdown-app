@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nextjs-auth-db-template
 
-## Getting Started
+简单的 Next.js 项目模板，包含用户认证和数据库功能。
 
-First, run the development server:
+技术栈
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Next.js 16
+- TypeScript
+- React
+- Tailwind CSS
+- Drizzle ORM
+- Neon Database
+- Resend
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## drizzle 数据库
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. 配置 drizzle.config.ts
+2. 运行 `npx drizzle-kit generate` 生成迁移文件
+3. 运行 `npx drizzle-kit migrate` 迁移数据库
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+依赖包 `"drizzle-orm": "0.44.6"` 为指定的版本, 大于该版本目前发现存在类型错误的问题
 
-## Learn More
+## resend 邮箱配置
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+部署项目时需要添加业务域名, 通过[resend 域名配置](https://resend.com/domains)添加. 并且只能使用私有域名, `vercel` 等公共域名无法添加.
