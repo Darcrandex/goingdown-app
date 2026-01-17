@@ -47,7 +47,7 @@ export default function WebappDetail() {
   const taskDetailQuery = useQuery({
     enabled: Boolean(taskId && !isDone),
     refetchInterval: 5000,
-    queryKey: ['getSomething'],
+    queryKey: ['getTaskById', taskId],
     queryFn: async () => {
       const res = await getTaskById(taskId)
       if (res.status === TaskStatus.SUCCESS || res.status === TaskStatus.FAILED) {
