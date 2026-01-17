@@ -5,8 +5,10 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 
   experimental: {
-    serverActions: { bodySizeLimit: "10mb" }, // 文件上传大小限制
+    serverActions: { bodySizeLimit: "5mb" }, // 文件上传大小限制
   },
+
+  
 };
 
 export default nextConfig;

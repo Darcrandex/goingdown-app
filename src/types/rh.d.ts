@@ -6,7 +6,7 @@ declare namespace RHApi {
   }
 
   // 上传文件结果
-  type UploadFileResult = Result<{ fileName: string; fileType: string }>
+  type UploadFileResult = { fileName: string; fileType: string }
 
   // AI应用任务参数
   type WebappParams = {

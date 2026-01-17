@@ -29,7 +29,9 @@ export async function addTask(params: { webappId?: string; workflowId?: string; 
       ? await runWorkflow({ workflowId: params.workflowId, nodeInfoList: params.nodeInfoList })
       : null
 
-  if (!rhTask) {
+  console.log('rh task', rhTask)
+
+  if (rhTask?.code !== 0) {
     throw new Error('任务创建失败')
   }
 
