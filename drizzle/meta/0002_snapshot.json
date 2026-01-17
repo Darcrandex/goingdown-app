@@ -1,6 +1,6 @@
 {
-  "id": "ac45e1b0-c1b5-4229-a3f5-d7e3aa683e09",
-  "prevId": "de7d5d88-45cb-4949-bcbe-9e54351fb642",
+  "id": "20f66914-1720-4a8a-9a5a-47d8bced343b",
+  "prevId": "cc550ae4-bba0-4133-89a3-7352b02fede0",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -17,12 +17,6 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "wallet_id": {
-          "name": "wallet_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -46,18 +40,18 @@
           "primaryKey": false,
           "notNull": false
         },
-        "balance": {
-          "name": "balance",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
         "remark": {
           "name": "remark",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "points": {
+          "name": "points",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -82,19 +76,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "bills_wallet_id_wallets_id_fk": {
-          "name": "bills_wallet_id_wallets_id_fk",
-          "tableFrom": "bills",
-          "tableTo": "wallets",
-          "columnsFrom": [
-            "wallet_id"
           ],
           "columnsTo": [
             "id"
@@ -177,26 +158,27 @@
           "name": "pay_time",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         },
         "payment_id": {
           "name": "payment_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "balance": {
-          "name": "balance",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
+          "notNull": true
         },
         "remark": {
           "name": "remark",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "points": {
+          "name": "points",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -252,37 +234,44 @@
           "primaryKey": false,
           "notNull": false
         },
-        "rh_task_id": {
-          "name": "rh_task_id",
+        "task_id": {
+          "name": "task_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "task_status": {
-          "name": "task_status",
+        "status": {
+          "name": "status",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'QUEUED'"
         },
-        "task_result_data": {
-          "name": "task_result_data",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "task_failed_reason": {
-          "name": "task_failed_reason",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "balance": {
-          "name": "balance",
+        "duration": {
+          "name": "duration",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
+        },
+        "result_list": {
+          "name": "result_list",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error_msg": {
+          "name": "error_msg",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "points": {
+          "name": "points",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -332,36 +321,43 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "nickname": {
-          "name": "nickname",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "role": {
           "name": "role",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "default": "'user'"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "points": {
+          "name": "points",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "nickname": {
+          "name": "nickname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -382,88 +378,27 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        },
         "users_phone_unique": {
           "name": "users_phone_unique",
           "nullsNotDistinct": false,
           "columns": [
             "phone"
           ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.wallets": {
-      "name": "wallets",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "balance": {
-          "name": "balance",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "wallets_user_id_users_id_fk": {
-          "name": "wallets_user_id_users_id_fk",
-          "tableFrom": "wallets",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.workflows": {
-      "name": "workflows",
+    "public.webapps": {
+      "name": "webapps",
       "schema": "",
       "columns": {
         "id": {
@@ -479,23 +414,56 @@
           "primaryKey": false,
           "notNull": true
         },
-        "rh_workflow_id": {
-          "name": "rh_workflow_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "config": {
-          "name": "config",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": false
-        },
         "description": {
           "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "cover_list": {
+          "name": "cover_list",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "webapp_id": {
+          "name": "webapp_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "node_info_list": {
+          "name": "node_info_list",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "like_count": {
+          "name": "like_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "collect_count": {
+          "name": "collect_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "run_count": {
+          "name": "run_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

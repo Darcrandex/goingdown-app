@@ -1,7 +1,102 @@
 'use server'
 
+// RunningHub API 密钥
 const runninghubApiKey = process.env.RUNNINGHUB_API_KEY || ''
 
+// 资源上传
+export async function uploadFile(file: File) {
+  const myHeaders = new Headers()
+  myHeaders.append('Host', 'www.runninghub.cn')
+
+  const formData = new FormData()
+  formData.append('apiKey', runninghubApiKey)
+  formData.append('file', file, file.name)
+  formData.append('fileType', 'input')
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formData,
+    redirect: 'follow',
+  }
+
+  const res = await fetch('https://www.runninghub.cn/task/openapi/upload', requestOptions as any)
+  const data: RHApi.Result<RHApi.UploadFileResult> = await res.json()
+  return data
+}
+
+// 发起 webapp
+export async function runWebapp(params: Omit<RHApi.WebappParams, 'apiKey'>) {
+  const myHeaders = new Headers()
+  myHeaders.append('Host', 'www.runninghub.cn')
+  myHeaders.append('Content-Type', 'application/json')
+
+  const raw = JSON.stringify({
+    apiKey: runninghubApiKey,
+    webappId: params.webappId,
+    nodeInfoList: params.nodeInfoList,
+  })
+
+  const requestOptions: any = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  }
+
+  const res = await fetch('https://www.runninghub.cn/task/openapi/ai-app/run', requestOptions)
+  const data: RHApi.Result<RHApi.TaskFetchResult> = await res.json()
+  return data
+}
+
+// 发起工作流任务
+export async function runWorkflow(params: Omit<RHApi.WorkflowParams, 'apiKey'>) {
+  const myHeaders = new Headers()
+  myHeaders.append('Host', 'www.runninghub.cn')
+  myHeaders.append('Content-Type', 'application/json')
+
+  const raw = JSON.stringify({
+    apiKey: runninghubApiKey,
+    workflowId: params.workflowId,
+    nodeInfoList: params.nodeInfoList,
+  })
+
+  const requestOptions: any = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  }
+
+  const res = await fetch('https://www.runninghub.cn/task/openapi/create', requestOptions)
+  const data: RHApi.Result<RHApi.TaskFetchResult> = await res.json()
+  return data
+}
+
+// 获取任务状态和执行结果
+export async function getTaskStatusAndResult(rhTaskId: string) {
+  const myHeaders = new Headers()
+  myHeaders.append('Host', 'www.runninghub.cn')
+  myHeaders.append('Content-Type', 'application/json')
+
+  const raw = JSON.stringify({
+    apiKey: runninghubApiKey,
+    taskId: rhTaskId,
+  })
+
+  const requestOptions: any = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  }
+
+  const res = await fetch('https://www.runninghub.cn/task/openapi/outputs', requestOptions)
+  const data: RHApi.Result<RHApi.TaskDetailResult> = await res.json()
+  return data
+}
+
+// v0-------------------------------------------------------
 // 上传资产到 RunningHub
 export async function uploadAsset(file: File) {
   const myHeaders = new Headers()
@@ -20,7 +115,7 @@ export async function uploadAsset(file: File) {
   }
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/upload', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.UploadResult> = await res.json()
+  const json = await res.json()
   return json.data
 }
 
@@ -59,7 +154,7 @@ export async function createTask(params: { imageUrl: string; videoUrl: string })
   }
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/ai-app/run', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.TaskDetail> = await res.json()
+  const json = await res.json()
 
   return json.data
 }
@@ -83,7 +178,7 @@ export async function getTaskStatus(taskId: string) {
   }
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/status', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.TaskStatus> = await res.json()
+  const json = await res.json()
   return json.data
 }
 
@@ -106,7 +201,7 @@ export async function getTaskResult(taskId: string) {
   }
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/outputs', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.TaskSuccessResult> = await res.json()
+  const json = await res.json()
 
   return json
 }
@@ -144,7 +239,7 @@ export async function createWokflowTask(params: { imageUrl: string; videoUrl: st
   }
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/create', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.TaskDetail> = await res.json()
+  const json = await res.json()
 
   return json.data
 }
@@ -170,7 +265,7 @@ export async function runWokflowTask(params: { workflowId: string; nodeInfoList:
   console.log('runWokflowTask params ====> ', params)
 
   const res = await fetch('https://www.runninghub.cn/task/openapi/create', requestOptions as any)
-  const json: AppScope.RunningHubResult<AppScope.TaskDetail> = await res.json()
+  const json = await res.json()
 
   console.log('run workflow task====> ', json)
 
@@ -179,14 +274,4 @@ export async function runWokflowTask(params: { workflowId: string; nodeInfoList:
   }
 
   return json.data
-}
-
-// 计算任务消耗的积分
-export async function calculateTaskCostTime(taskResult: AppScope.TaskSuccessResult) {
-  // 每个秒消耗0.01积分
-  const balancePerSecond = 0.01
-  if (!Array.isArray(taskResult)) {
-    return 0
-  }
-  return taskResult.reduce((acc, cur) => acc + (Number.parseFloat(cur.taskCostTime) || 0), 0) * balancePerSecond
 }

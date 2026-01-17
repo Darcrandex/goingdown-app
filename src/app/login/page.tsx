@@ -1,9 +1,8 @@
 'use client'
 
-import { userSignIn, userSignUp } from '@/actions/auth'
+import { userLogin } from '@/actions/auth'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Form, Input, Radio } from 'antd'
-import { delay } from 'es-toolkit'
+import { Button, Form, Input } from 'antd'
 import { useRouter } from 'next/navigation'
 
 const actionTypes = [
@@ -15,18 +14,8 @@ export default function Login() {
   const router = useRouter()
   const [form] = Form.useForm()
   const submitMutation = useMutation({
-    mutationFn: async (values: Record<string, string>) => {
-      console.log('values', values)
-
-      if (values.actionType === 'login') {
-        console.log('登录')
-        await userSignIn({ email: values.email, password: values.password })
-      } else if (values.actionType === 'register') {
-        console.log('注册')
-        await userSignUp({ email: values.email, password: values.password })
-        await delay(1000)
-        await userSignIn({ email: values.email, password: values.password })
-      }
+    mutationFn: async (values: { phone: string; code: string }) => {
+      await userLogin({ phone: values.phone, code: values.code })
     },
 
     onSuccess: () => {
@@ -38,22 +27,12 @@ export default function Login() {
     <div className='mx-auto w-md'>
       <h1>登录</h1>
 
-      <Form form={form} initialValues={{ actionType: 'login' }} onFinish={submitMutation.mutate}>
-        <Form.Item name='actionType' label='操作类型'>
-          <Radio.Group options={actionTypes} />
+      <Form form={form} onFinish={submitMutation.mutate}>
+        <Form.Item name='phone' label='手机号' rules={[{ required: true, message: '请输入手机号' }]}>
+          <Input placeholder='请输入手机号' />
         </Form.Item>
-        <Form.Item
-          name='email'
-          label='邮箱'
-          rules={[
-            { required: true, message: '请输入邮箱' },
-            { type: 'email', message: '请输入正确的邮箱格式' },
-          ]}
-        >
-          <Input placeholder='请输入邮箱' />
-        </Form.Item>
-        <Form.Item name='password' label='密码' rules={[{ required: true, message: '请输入密码' }]}>
-          <Input.Password placeholder='请输入密码' />
+        <Form.Item name='code' label='验证码' rules={[{ required: true, message: '请输入验证码' }]}>
+          <Input placeholder='请输入验证码' maxLength={4} />
         </Form.Item>
         <Form.Item>
           <Button type='primary' htmlType='submit'>

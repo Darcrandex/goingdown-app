@@ -1,6 +1,6 @@
 'use client'
 
-import { getWorkfows } from '@/actions/workflow'
+import { getWebappList } from '@/actions/webapp'
 import { useUserInfo } from '@/query/useUserInfo'
 import { useQuery } from '@tanstack/react-query'
 import { App } from 'antd'
@@ -12,24 +12,24 @@ export default function Home() {
   const { message } = App.useApp()
   const userInfoQuery = useUserInfo()
 
-  const workflowsQuery = useQuery({
-    queryKey: ['workflows'],
-    queryFn: getWorkfows,
+  const { data } = useQuery({
+    queryKey: ['webapp', 'list'],
+    queryFn: () => getWebappList(),
   })
 
-  const onOpenWorkflow = (id: string) => {
+  const beforeNavigate = (id: string) => {
     if (userInfoQuery.isError) {
       message.error('请先登录')
       router.push('/login')
       return
     }
-    router.push(`/workflow/${id}`)
+    router.push(`/webapp/${id}`)
   }
 
   return (
     <>
       <header className='flex items-center space-x-4'>
-        <p>{userInfoQuery.data?.email}</p>
+        <p>{userInfoQuery.data?.nickname}</p>
 
         {userInfoQuery.isError && <Link href='/login'>登录</Link>}
         {userInfoQuery.isSuccess && <Link href='/user/profile'>用户中心</Link>}
@@ -37,14 +37,14 @@ export default function Home() {
 
       <hr />
 
-      <h1>Workflow List</h1>
+      <h1>webapp List</h1>
 
-      <ol className='m-6 list-decimal'>
-        {workflowsQuery.data?.map((item) => (
+      <ol className='m-6 list-decimal space-y-2'>
+        {data?.map((item) => (
           <li
             key={item.id}
             className='cursor-pointer underline hover:text-blue-500'
-            onClick={() => onOpenWorkflow(item.id)}
+            onClick={() => beforeNavigate(item.id)}
           >
             {item.name}
           </li>

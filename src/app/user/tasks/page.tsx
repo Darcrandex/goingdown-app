@@ -16,7 +16,10 @@ export default function TasksPage() {
       <h1>Tasks</h1>
       <ul>
         {data?.map((task) => (
-          <li key={task.id}>{task.taskStatus}</li>
+          <li key={task.id}>
+            <p>{task.taskId}</p>
+            <p>{task.status}</p>
+          </li>
         ))}
       </ul>
     </div>

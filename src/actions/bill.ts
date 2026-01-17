@@ -1,14 +1,12 @@
 'use server'
-
 import { db } from '@/db'
-import { walletTable } from '@/db/schema/wallet'
+import { billTable } from '@/db/schema/bill'
 import { eq } from 'drizzle-orm'
-import { getUserWallet } from './wallet'
+import { checkToken } from './auth'
 
-export async function updateBalance(balance: number) {
-  const wallet = await getUserWallet()
-  const prevBalance = wallet.balance
-  const nextBalance = Math.max(0, prevBalance + balance)
-
-  await db.update(walletTable).set({ balance: nextBalance }).where(eq(walletTable.id, wallet.id))
+// 获取所有消费记录
+export async function getBills() {
+  const user = await checkToken()
+  const bills = await db.select().from(billTable).where(eq(billTable.userId, user.id))
+  return bills
 }

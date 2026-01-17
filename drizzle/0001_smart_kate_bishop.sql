@@ -1,0 +1,1 @@
+ALTER TABLE "tasks" ADD COLUMN "is_record" boolean DEFAULT false NOT NULL;
